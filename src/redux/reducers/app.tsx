@@ -1,60 +1,28 @@
-import {ADD_QUESTION, STEPS, ADD_ANSWER, ADD_CORRECT_ANSWER, REMOVE_QUESTION, REMOVE_ANSWER, REMOVE_CORRECT_ANSWER, RESET_ALL} from "../actions/";
+import {STEPS, CHANGE_STATE, REMOVE_STEP, RESET_ALL} from "../actions/";
 
 const defaultState = {
-    question: null,
-    answers: {
-        1: null,
-        2: null,
-        3: null,
-        4: null
-    },
-    correctAnswer: null,
-    state: STEPS.QUESTION
+    values: {},
+    step: STEPS.QUESTION
 };
 
 export function app(state = defaultState, action: any) {
       switch (action.type) {
-        case ADD_QUESTION:
-            return {
+        case CHANGE_STATE:
+            return{
                 ...state,
-                question: {
-                    content: action.question,
-                    mode: action.mode
+                step: action.step,
+                values: {
+                    ...state.values,
+                    [action.currentStep]: action.values
                 }
             }
-        case REMOVE_QUESTION:
+        case REMOVE_STEP:
             return {
                 ...state,
-                question: null
-            }
-        case ADD_ANSWER:
-            return {
-                ...state,
-                answers: {
-                    ...state.answers,
-                    [action.index]: {
-                        content: action.answer,
-                        mode: action.mode
-                    }
+                values: {
+                    ...state.values,
+                    [action.step]: null
                 }
-            }
-        case REMOVE_ANSWER:
-            return {
-                ...state,
-                answers: {
-                    ...state.answers,
-                    [action.index]: null
-                },
-            }
-        case ADD_CORRECT_ANSWER:
-            return {
-                ...state,
-                correctAnswer: action.correct
-            }
-        case REMOVE_CORRECT_ANSWER:
-            return {
-                ...state,
-                correctAnswer: null
             }
         case RESET_ALL:
             return defaultState;
