@@ -1,9 +1,10 @@
 import React, { Component, Ref, RefObject, MutableRefObject } from 'react';
 import { connect } from 'react-redux';
-import PdfComponent from '../../components/molecules/Pdf';
+import PDFViewer from '../../components/molecules/Pdf';
 import { StyleSheet, css } from 'aphrodite';
 import Button from "../../components/atoms/Button";
-import {STEPS} from "../../redux/actions";
+import { STEPS } from "../../redux/actions";
+import PDFJSBackend from "../../backends/pdfjs";
 
 interface iProps {
 
@@ -20,18 +21,20 @@ class Dashboard extends Component<iProps, iState>{
     }
 
     componentDidMount() {
-        document.addEventListener("keydown", this.onKeyDown.bind(this), true);
-        // console.log(this.pdfRef);
+        document.addEventListener("keydown", (this.onKeyDown.bind(this)), true);
+
+        //  console.log(this.pdfRef.current.contentWindow.document);
     }
 
     async onKeyDown(event: KeyboardEvent) {
-       const key = event.keyCode;
-       const ctrl = event.ctrlKey || event.metaKey;
-       if(ctrl && key == 67) {
-           // ctrl + c
-        console.log("LAA");
-        console.log(await navigator.clipboard.readText());
-       }
+        console.log("Presesd");
+        const key = event.keyCode;
+        const ctrl = event.ctrlKey || event.metaKey;
+        if (ctrl && key == 67) {
+            // ctrl + c
+            console.log("LAA");
+            console.log(await navigator.clipboard.readText());
+        }
     }
 
     render() {
@@ -49,9 +52,6 @@ class Dashboard extends Component<iProps, iState>{
                     </div>
 
                 </div>
-                <div className={css(styles.pdfSection)}>
-                    <PdfComponent forwardRef={this.pdfRef} src="http://localhost:3000/Kubernetes%20Microservices%20with%20Docker.pdf" />
-                </div>
             </div>
         )
     };
@@ -59,29 +59,24 @@ class Dashboard extends Component<iProps, iState>{
 
 const styles = StyleSheet.create({
     container: {
-        display: "flex"
+        display: "flex",
+        background: "#fff"
     },
     stepsSection: {
-        flex: 0.3,
-        maxWidth: "400px",
-        boxShadow: "3px 0 5px 0 #555;",
-        padding: "2px 2px",
+        flex: 1,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        width: "100%",
+        height: "100vh",
+        fontSize: '1.3rem'
     },
     buttonsContainer: {
 
     },
     stepsHeading: {
         marginBottom: "1rem"
-    },
-    pdfSection: {
-        display: "flex",
-        flex: 1,
-        justifyContent: "center",
-        background: "rgb(82, 86, 89)"
     }
 });
 

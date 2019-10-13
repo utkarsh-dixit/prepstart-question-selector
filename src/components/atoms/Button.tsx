@@ -24,11 +24,12 @@ const styles = StyleSheet.create({
     container: {
         display: "flex",
         background: "#272727",
-        padding: "0.8rem 1.6rem",
-        fontSize: "0.9rem",
+        padding: "0.8rem 2rem",
+        fontSize: "1.1rem",
         borderRadius: "1px",
         marginBottom: "1rem",
-        justifyContent: "center"
+        justifyContent: "center",
+        cursor: "pointer"
     },
     text: {
         color: "#fff"
