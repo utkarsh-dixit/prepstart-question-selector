@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/prepstart-question-selector/static/css/main.b42de402.chunk.css",
+    "main.js": "/prepstart-question-selector/static/js/main.0dbbb7b0.chunk.js",
+    "main.js.map": "/prepstart-question-selector/static/js/main.0dbbb7b0.chunk.js.map",
+    "runtime-main.js": "/prepstart-question-selector/static/js/runtime-main.34f572e7.js",
+    "runtime-main.js.map": "/prepstart-question-selector/static/js/runtime-main.34f572e7.js.map",
+    "static/js/2.cf6a7c1b.chunk.js": "/prepstart-question-selector/static/js/2.cf6a7c1b.chunk.js",
+    "static/js/2.cf6a7c1b.chunk.js.map": "/prepstart-question-selector/static/js/2.cf6a7c1b.chunk.js.map",
+    "index.html": "/prepstart-question-selector/index.html",
+    "precache-manifest.38f17cec06c5eae48952bfe95d1eea68.js": "/prepstart-question-selector/precache-manifest.38f17cec06c5eae48952bfe95d1eea68.js",
+    "service-worker.js": "/prepstart-question-selector/service-worker.js",
+    "static/css/main.b42de402.chunk.css.map": "/prepstart-question-selector/static/css/main.b42de402.chunk.css.map"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.34f572e7.js",
+    "static/js/2.cf6a7c1b.chunk.js",
+    "static/css/main.b42de402.chunk.css",
+    "static/js/main.0dbbb7b0.chunk.js"
+  ]
+}
