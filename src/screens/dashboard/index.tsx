@@ -15,7 +15,7 @@ interface iState {
 
 };
 
-const DEFAULT_SCALE = 2;
+const DEFAULT_SCALE = 1;
 // question_details: { title: string, hint?: string, difficulty?: string, metadata?: any, image?: string, topic_id?: number, subject_id?: number, mode?: number, options: Array<{ optionText: string, mode?: number, isCorrect: boolean }>, summary?: string, ref?: number }
 class Dashboard extends Component<any, any>{
     pdfRef: any;
@@ -86,23 +86,24 @@ class Dashboard extends Component<any, any>{
                         isCorrect: correct_answer === 1
                     },
                     {
-                        optionText: options[1].content,
+                        optionText: options[2].content,
                         mode: options[2].mode,
                         isCorrect: correct_answer === 2
                     },
                     {
-                        optionText: options[1].content,
+                        optionText: options[3].content,
                         mode: options[3].mode,
                         isCorrect: correct_answer === 3
                     },
                     {
-                        optionText: options[1].content,
+                        optionText: options[4].content,
                         mode: options[4].mode,
                         isCorrect: correct_answer === 4
                     }
                 ]
 
             };
+            console.log(payload);
             const _this = this;
             this.props.submit(payload);
         }
