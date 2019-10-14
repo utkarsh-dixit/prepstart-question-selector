@@ -72,12 +72,12 @@ class Dashboard extends Component<any, any>{
             const payload = {
                 title: this.props.values[STEPS.QUESTION].mode === CONTENT_MODE.TEXT ?  this.props.values[STEPS.QUESTION].content : null,
                 mode: this.props.values[STEPS.QUESTION].mode,
-                difficulty: this.state.difficulty,
+                difficulty: this.state.config.difficulty,
                 metadata: JSON.stringify(this.metadata),
                 image: this.props.values[STEPS.QUESTION].mode === CONTENT_MODE.IMAGE ?  this.props.values[STEPS.QUESTION].content : null,
-                topic_id: parseInt(this.state.topic_id),
-                subject_id: parseInt(this.state.subject_id),
-                summary: this.state.summary,
+                topic_id: parseInt(this.state.config.topic_id),
+                subject_id: parseInt(this.state.config.subject_id),
+                summary: this.state.config.summary,
                 options: [
                     {
                         optionText: options[1].content,
@@ -211,7 +211,7 @@ class Dashboard extends Component<any, any>{
                         <Input placeholder="Enter topic_id" title="Topic" value={this.state.config.topic_id} callback={this.updateTopicId.bind(this)}/>
                         <Input placeholder="Enter subject_id" title="Subject" value={this.state.config.subject_id} callback={this.updateSubjectId.bind(this)}/>
                         <Input placeholder="Enter difficulty" title="Difficulty" value={this.state.config.difficulty} callback={this.updateDifficulty.bind(this)}/>
-                        <Input placeholder="Enter summary" title="summary" value={this.state.config.summary} callback={this.updateSummary.bind(this)}/>
+                        <Input placeholder="Enter summary" title="Summary" value={this.state.config.summary} callback={this.updateSummary.bind(this)}/>
                     </div>
                     <div className={css(styles.stepsHeading)}></div>
                     <div className={css(styles.stepsHeading)}></div>
