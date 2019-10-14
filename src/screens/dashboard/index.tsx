@@ -7,6 +7,7 @@ import { STEPS, CONTENT_MODE, moveToNextStep, resetAll, submit } from "../../red
 import PDFJSBackend from "../../backends/pdfjs";
 import html2canvas from "html2canvas";
 import {requestAPICall} from "../../util/network";
+import Input from '../../components/atoms/input';
 
 interface iProps {
 
@@ -19,11 +20,7 @@ const DEFAULT_SCALE = 1;
 // question_details: { title: string, hint?: string, difficulty?: string, metadata?: any, image?: string, topic_id?: number, subject_id?: number, mode?: number, options: Array<{ optionText: string, mode?: number, isCorrect: boolean }>, summary?: string, ref?: number }
 class Dashboard extends Component<any, any>{
     pdfRef: any;
-    subject_id: number;
-    topic_id: number;
-    difficulty: string;
     metadata: any;
-    summary: string;
 
     constructor(props: iProps) {
         super(props);
@@ -38,12 +35,14 @@ class Dashboard extends Component<any, any>{
             },
             values: {
 
+            },
+            config: {
+                subject_id: 1,
+                topic_id: 19,
+                difficulty: "easy",
+                summary: "Empty summary"
             }
         }
-        this.summary = "Empty summary";
-        this.difficulty = "easy";
-        this.topic_id = 19;
-        this.subject_id = 1;
         this.metadata = {};
     }
 
@@ -73,12 +72,12 @@ class Dashboard extends Component<any, any>{
             const payload = {
                 title: this.props.values[STEPS.QUESTION].mode === CONTENT_MODE.TEXT ?  this.props.values[STEPS.QUESTION].content : null,
                 mode: this.props.values[STEPS.QUESTION].mode,
-                difficulty: this.difficulty,
+                difficulty: this.state.difficulty,
                 metadata: JSON.stringify(this.metadata),
                 image: this.props.values[STEPS.QUESTION].mode === CONTENT_MODE.IMAGE ?  this.props.values[STEPS.QUESTION].content : null,
-                topic_id: this.topic_id,
-                subject_id: this.subject_id,
-                summary: this.summary,
+                topic_id: parseInt(this.state.topic_id),
+                subject_id: parseInt(this.state.subject_id),
+                summary: this.state.summary,
                 options: [
                     {
                         optionText: options[1].content,
@@ -179,18 +178,51 @@ class Dashboard extends Component<any, any>{
         }
     }
 
+    updateTopicId(value){
+        this.setState({...this.state, config: {...this.state.config, topic_id: value}})
+    }
+
+    updateSubjectId(value){
+        this.setState({...this.state, config: {...this.state.config, subject_id: value}})
+    }
+
+    updateSummary(value){
+        this.setState({...this.state, config: {...this.state.config, summary: value}})
+    }
+
+    updateDifficulty(value){
+        this.setState({...this.state, config: {...this.state.config, difficulty: value}})
+    }
+
+
     render() {
+        const isQuestion = (this.props.step===STEPS.QUESTION);
+        const isAnswer1 = (this.props.step===STEPS.ANSWER_1);
+        const isAnswer2 = (this.props.step===STEPS.ANSWER_2);
+        const isAnswer3 = (this.props.step===STEPS.ANSWER_3);
+        const isAnswer4 = (this.props.step===STEPS.ANSWER_4);
+        const isCorrectAnswer = (this.props.step===STEPS.CORRECT_ANSWER);
+
         return (
             <div className={css(styles.container)}>
                 <div className={css(styles.stepsSection)}>
+                    <div className={css(styles.stepsHeading)}>Config</div>
+                    <div className={css(styles.buttonsContainer)}>
+                        <Input placeholder="Enter topic_id" title="Topic" value={this.state.config.topic_id} callback={this.updateTopicId.bind(this)}/>
+                        <Input placeholder="Enter subject_id" title="Subject" value={this.state.config.subject_id} callback={this.updateSubjectId.bind(this)}/>
+                        <Input placeholder="Enter difficulty" title="Difficulty" value={this.state.config.difficulty} callback={this.updateDifficulty.bind(this)}/>
+                        <Input placeholder="Enter summary" title="summary" value={this.state.config.summary} callback={this.updateSummary.bind(this)}/>
+                    </div>
+                    <div className={css(styles.stepsHeading)}></div>
+                    <div className={css(styles.stepsHeading)}></div>
                     <div className={css(styles.stepsHeading)}>Steps</div>
                     <div className={css(styles.buttonsContainer)}>
-                        <Button text="Select Question"></Button>
-                        <Button text="Select Answer 1"></Button>
-                        <Button text="Select Answer 2"></Button>
-                        <Button text="Select Answer 3"></Button>
-                        <Button text="Select Answer 4"></Button>
-                        <Button text="Select Correct Answer"></Button>
+                        <Button text="Select Question" selected={isQuestion}></Button>
+                        <Button text="Select Answer 1" selected={isAnswer1}></Button>
+                        <Button text="Select Answer 2" selected={isAnswer2}></Button>
+                        <Button text="Select Answer 3" selected={isAnswer3}></Button>
+                        <Button text="Select Answer 4" selected={isAnswer4}></Button>
+                        <Button text="Select Correct Answer" selected={isCorrectAnswer}></Button>
                     </div>
 
                 </div>

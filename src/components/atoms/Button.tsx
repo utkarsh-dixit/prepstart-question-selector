@@ -6,13 +6,19 @@ interface iProps{
     callback?: any;
     destroyProgressCallback?: any;
     completed?: boolean;
+    selected?: boolean;
 }
 export default class Button extends React.Component<iProps, {}>{
 
     render() {
-        const {text, callback, destroyProgressCallback, completed} = this.props;
+        const {text, callback, destroyProgressCallback, completed, selected} = this.props;
+        // console.log(this.props.selected);
+        const classes = [styles.container];
+        if(selected){
+            classes.push(styles.selected);
+        }
         return (
-            <div className={css(styles.container)} onClick={callback}>
+            <div className={css(...classes)} onClick={callback} >
                 <div className={css(styles.text)}>{text}</div>
                 {completed && <div className={css(styles.cancel)} onClick={destroyProgressCallback}></div>}
             </div>
@@ -30,6 +36,9 @@ const styles = StyleSheet.create({
         marginBottom: "1rem",
         justifyContent: "center",
         cursor: "pointer"
+    },
+    selected: {
+        background: "green"
     },
     text: {
         color: "#fff"
