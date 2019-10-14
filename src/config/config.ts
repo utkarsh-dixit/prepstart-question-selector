@@ -1,1 +1,1 @@
-export const serverName = "http://localhost:3001/";
+export const serverName = "https://backend.prepstart.co/";
