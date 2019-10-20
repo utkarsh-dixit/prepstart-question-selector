@@ -19,14 +19,18 @@
     "pdfjs-dist": "^2.2.228",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
+    "react-modal": "^3.10.1",
     "react-redux": "^7.1.1",
+    "react-resizable": "^1.8.0",
     "react-scripts": "3.2.0",
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "systemjs": "^6.1.4",
-    "typescript": "3.6.4"
+    "typescript": "3.6.4",
+    "underscore": "^1.9.1",
+    "workerpool": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

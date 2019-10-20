@@ -4323,7 +4323,7 @@ var defaultOptions = {
     kind: OptionKind.API
   },
   cMapUrl: {
-    value: '../web/cmaps/',
+    value: '../prepstart-question-selector/web/cmaps/',
     kind: OptionKind.API
   },
   disableAutoFetch: {
@@ -4372,7 +4372,7 @@ var defaultOptions = {
     kind: OptionKind.WORKER
   },
   workerSrc: {
-    value: '../build/pdf.worker.js',
+    value: '../prepstart-question-selector/build/pdf.worker.js',
     kind: OptionKind.WORKER
   }
 };

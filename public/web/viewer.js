@@ -4323,7 +4323,7 @@ var defaultOptions = {
     kind: OptionKind.API
   },
   cMapUrl: {
-    value: '../web/cmaps/',
+    value: '../prepstart-question-selector/web/cmaps/',
     kind: OptionKind.API
   },
   disableAutoFetch: {

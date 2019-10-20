@@ -4,6 +4,9 @@ import { requestAPICall } from "../../util/network";
 export const RESET_ALL = "RESET_ALL";
 export const CHANGE_STATE = "CHANGE_STATE";
 export const REMOVE_STEP = "REMOVE_STEP";
+export const CHANGE_STEP = "CHANGE_STEP";
+export const SAVE_STEP = "SAVE_STEP";
+export const SAVE_STEP_PROGRESS = "SAVE_STEP_PROGRESS";
 
 export const STEPS = {
     QUESTION: 1,
@@ -46,10 +49,29 @@ export const removeStep =  (step: number) => {
     };
 }
 
+export const moveToThisStep = (step: number) => {
+    return async(dispatch: any) => {
+        dispatch({type: CHANGE_STEP, step});
+    };
+}
+
+export const moveToNextStepWithoutValues = (step : number) => {
+    return async(dispatch: any) => {
+        dispatch({type: CHANGE_STEP, step: NAVIGATION[step]});
+    };
+};
+
+export const saveProgress = (step: number, values: any) => {
+    return async(dispatch: any) => {
+        dispatch({type: SAVE_STEP_PROGRESS, step, values});
+    };
+}
+
 export const submit = (payload: any, callback: any) => {
     return async (dispatch: any) => {
         dispatch({type: RESET_ALL});
         const result = await requestAPICall("/createQuestion", payload);
+        if(callback)
         callback(result.data);
     }
 }
