@@ -17,7 +17,7 @@ import Modal from 'react-modal';
 import _ from "underscore";
 
 import { reject } from 'q';
-import { tsThisType } from '@babel/types';
+import { tsThisType, thisExpression } from '@babel/types';
 
 interface iProps {
 
@@ -47,7 +47,8 @@ const INITIAL_STATE = {
     block_mode: true,
     block: {
         height: 100,
-        width: 300
+        width: 300,
+        unit: 3
     },
     tasks: []
 };
@@ -93,7 +94,7 @@ class Dashboard extends Component<any, any>{
     }
 
     componentDidMount() {
-        window.addEventListener("mousemove", _.throttle(this.onMouseMove.bind(this), 40), false);
+        document.getElementById("viewer").addEventListener("mousemove", _.throttle(this.onMouseMove.bind(this), 40), false);
         window.addEventListener("keydown", this.onKeyDown.bind(this), false);
         window.addEventListener("keyup", this.onKeyUp.bind(this), false);
         //  console.log(this.pdfRef.current.contentWindow.document);
@@ -175,23 +176,49 @@ class Dashboard extends Component<any, any>{
         return destCanvas;
     }
     async onMouseMove(event: MouseEvent) {
+        // console.log(event.target);
         event.preventDefault();
-        this.setState({ mousePos: { X: event.clientX, Y: event.clientY } });
+        const target = event.target as any;
+        let _target = this.state.mousePos.target ? this.state.mousePos.target : null;
+        if(target.tagName==="CANVAS" && target.id.slice(0,4) === "page"){
+            _target = target;
+        } else {
+           
+            if(target.tagName==="SPAN" && target.parentElement.className === "textLayer"){
+                _target = target.parentElement.parentElement.querySelector("canvas");
+            } else if(target.tagName==="DIV" && target.className === "textLayer") {
+                _target = target.parentElement.querySelector("canvas");
+            }
+        }
+        this.setState({ mousePos: { X: event.pageX, Y: event.pageY, target: _target } });
     }
 
-    async takeScreenshot() {
+    getRelativePosition(canvas, abs){
+        let pos = { X: 0, Y: 0};
+        if(canvas.tagName==="CANVAS" && canvas.id.slice(0,4) === "page"){
+            const rect = canvas.getBoundingClientRect();
+            const xPos = abs.X - rect.x;
+            const yPos = abs.Y - rect.y;
+            pos = { X: xPos > 0 ? xPos : 0, Y: yPos > 0 ? yPos : 0};
+            console.log(pos);
+        }
+        return pos;
+    }
+    async takeScreenshot(canvas) {
         this.setState({ cropping: { ...this.state.cropping, value: false } });
-        const width = !this.state.block_mode ? Math.abs(this.state.mousePos.X - this.state.cropping.clientX) : this.state.block.width;
-        const height = !this.state.block_mode ? Math.abs(this.state.mousePos.Y - this.state.cropping.clientY) : this.state.block.height;
+        const relativeCroppingPos = this.getRelativePosition(canvas, {X: this.state.cropping.clientX, Y: this.state.cropping.clientY});
+        const relativeMousePos = this.getRelativePosition(canvas, {X: this.state.mousePos.X, Y: this.state.mousePos.Y});
+
+        const width = !this.state.block_mode ? Math.abs(relativeMousePos.X - relativeCroppingPos.X) : this.state.block.width;
+        const height = !this.state.block_mode ? Math.abs(relativeMousePos.Y - relativeCroppingPos.Y) : this.state.block.height;
         document.body.style.cursor = "default";
         const style = document.getElementById("myStyle");
 
         if (style) {
             style.textContent = "";
         }
-        const clientX = this.state.cropping.clientX;
-        const clientY = this.state.cropping.clientY;
-        const canvas = await html2canvas(document.querySelector("body"), { scale: DEFAULT_SCALE });
+        const clientX = relativeCroppingPos.X;
+        const clientY = relativeCroppingPos.Y;
         const _this = this;
         const _promise = new Promise(async (resolve, reject) => {
             const new_canvas = this.cropCanvas(canvas, clientX * DEFAULT_SCALE, clientY * DEFAULT_SCALE, width * DEFAULT_SCALE, height * DEFAULT_SCALE);
@@ -216,13 +243,32 @@ class Dashboard extends Component<any, any>{
             return false;
         }
         if (this.state.cropping.value && !this.state.block_mode && event.keyCode == 16) {
-            this.takeScreenshot();
+            this.takeScreenshot(this.state.mousePos.target);
         }
     }
 
     moveToNextStep(content: any, mode: number) {
         if (this.props.step !== STEPS.SUBMIT) {
             this.props.moveToNextStep(this.props.step, { content, mode });
+        }
+    }
+
+    disableTextLayering(){
+        const style: HTMLStyleElement = document.getElementById("disableTextlayer") ? document.getElementById("disableTextlayer") as HTMLStyleElement : document.createElement("style");
+        style.id = "disableTextlayer";
+        style.textContent = `
+            .textLayer{
+                display: none
+            }
+        `;
+        if (!document.getElementById("disableTextlayer")) {
+            document.body.appendChild(style);
+        }
+    }
+
+    enableTextLayering(){
+        if (document.getElementById("disableTextlayer")) {
+            document.getElementById("disableTextlayer").textContent = "";
         }
     }
 
@@ -236,8 +282,24 @@ class Dashboard extends Component<any, any>{
             // Toggle block mode with b key
             this.handleBlockModeToggle();
         }
+        if(key === 40){
+            event.preventDefault();
+            this.setState({block: {...this.state.block, height: this.state.block.height - this.state.block.unit }});
+        }
+        if(key === 38){
+            event.preventDefault();
+            this.setState({block: {...this.state.block, height: this.state.block.height + this.state.block.unit}});
+        }
+        if(key === 37){
+            event.preventDefault();
+            this.setState({block: {...this.state.block, width: this.state.block.width - this.state.block.unit }});
+        }
+        if(key === 39){
+            event.preventDefault();
+            this.setState({block: {...this.state.block, width: this.state.block.width + this.state.block.unit }});
+        }
         if (key === 83 && this.state.cropping.value) {
-            this.takeScreenshot();
+            this.takeScreenshot(this.state.mousePos.target);
         }
         if (ctrl && key == 67) {
             // ctrl + c
@@ -245,6 +307,7 @@ class Dashboard extends Component<any, any>{
             const content = await navigator.clipboard.readText();
             this.moveToNextStep(content, CONTENT_MODE.TEXT);
         } else if (key == 16) {
+            this.disableTextLayering();
             this.setState({ cropping: { value: true, clientX: this.state.mousePos.X, clientY: this.state.mousePos.Y } });
             // document.body.style.cursor="none";
             document.body.style.cursor = "crosshair";
@@ -328,6 +391,10 @@ class Dashboard extends Component<any, any>{
         )
     }
 
+    updateBlockUnit(unit){
+        this.setState({ block: { ...this.state.block, unit: parseInt(unit) ? parseInt(unit) : 0 } });
+    }
+
     render() {
         const isQuestion = (this.props.step === STEPS.QUESTION);
         const isAnswer1 = (this.props.step === STEPS.ANSWER_1);
@@ -351,6 +418,8 @@ class Dashboard extends Component<any, any>{
                             <React.Fragment>
                                 <Input placeholder="Enter Block Width" title="Block Width" value={this.state.block.width} callback={this.updateBlockWidth.bind(this)} />
                                 <Input placeholder="Enter Block Height" title="Block Height" value={this.state.block.height} callback={this.updateBlockHeight.bind(this)} />
+                                <Input placeholder="Enter Block Unit" title="Block Unit" value={this.state.block.unit} callback={this.updateBlockUnit.bind(this)} />
+
                             </React.Fragment>
                         }
                     </div>
@@ -378,8 +447,10 @@ class Dashboard extends Component<any, any>{
 
                 </div>
                 {this.state.cropping.value &&
+                <React.Fragment>
                     <AreaOverlay resizeCallback={this.handleOverlayResize.bind(this)} x={this.state.cropping.clientX} y={this.state.cropping.clientY} width={!this.state.block_mode ? Math.abs(this.state.mousePos.X - this.state.cropping.clientX) : this.state.block.width} height={!this.state.block_mode ? Math.abs(this.state.mousePos.Y - this.state.cropping.clientY) : this.state.block.height}></AreaOverlay>
-                }
+                </React.Fragment>
+            }
             </div>
         )
     };
