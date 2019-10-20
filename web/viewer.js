@@ -2512,6 +2512,7 @@ function webViewerKeyDown(evt) {
         if (pdfViewer.isHorizontalScrollbarEnabled) {
           turnOnlyIfPageFit = true;
         }
+        break;
 
       case 75:
       case 80:
@@ -2553,6 +2554,7 @@ function webViewerKeyDown(evt) {
         if (pdfViewer.isHorizontalScrollbarEnabled) {
           turnOnlyIfPageFit = true;
         }
+        break;
 
       case 74:
       case 78:
