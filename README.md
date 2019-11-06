@@ -87,7 +87,7 @@ Block mode of selection is selecting a question based on properties (width, heig
 
   
 
-4. Pen Touch Mode
+**4. Pen Touch Mode**
 
 Pen Touch mode allows you to crop an image by pointing two points, initial and endpoint. It helps by decreasing the time of selection and faster progress in tablets and smartphones. When put in with Block mode it's even faster.
 
@@ -101,7 +101,7 @@ Pen Touch mode allows you to crop an image by pointing two points, initial and e
 
   
 
-5. Pen Touch Mode + Block Mode
+**5. Pen Touch Mode + Block Mode**
 
 * When two of them are used together, they have both properties of block and pen touch mode.
 
