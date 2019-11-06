@@ -248,8 +248,6 @@ class Dashboard extends Component<any, any>{
         if (style) {
             style.textContent = "";
         }
-        const clientX = this.state.cropping.clientX;
-        const clientY = this.state.cropping.clientY;
         const _this = this;
         const _promise = new Promise(async (resolve, reject) => {
             const new_canvas = this.cropCanvas(canvas, relativeCroppingPos.X * DEFAULT_SCALE, relativeCroppingPos.Y * DEFAULT_SCALE, width * DEFAULT_SCALE, height * DEFAULT_SCALE);
@@ -315,11 +313,11 @@ class Dashboard extends Component<any, any>{
         }
         if (key === 40) {
             event.preventDefault();
-            this.setState({ block: { ...this.state.block, height: this.state.block.height - this.state.block.unit } });
+            this.setState({ block: { ...this.state.block, height: this.state.block.height + this.state.block.unit } });
         }
         if (key === 38) {
             event.preventDefault();
-            this.setState({ block: { ...this.state.block, height: this.state.block.height + this.state.block.unit } });
+            this.setState({ block: { ...this.state.block, height: this.state.block.height - this.state.block.unit } });
         }
         if (key === 37) {
             event.preventDefault();
@@ -450,9 +448,9 @@ class Dashboard extends Component<any, any>{
                         <Switch value={this.state.block_mode} toggleCallback={this.handleBlockModeToggle.bind(this)}>Block Mode:</Switch>
                         {this.state.block_mode &&
                             <React.Fragment>
-                                <Input placeholder="Enter Block Width" title="Block Width" value={this.state.block.width} callback={this.updateBlockWidth.bind(this)} />
-                                <Input placeholder="Enter Block Height" title="Block Height" value={this.state.block.height} callback={this.updateBlockHeight.bind(this)} />
-                                <Input placeholder="Enter Block Unit" title="Block Unit" value={this.state.block.unit} callback={this.updateBlockUnit.bind(this)} />
+                                <Input placeholder="Enter Block Width" title="Width" value={this.state.block.width} callback={this.updateBlockWidth.bind(this)} />
+                                <Input placeholder="Enter Block Height" title="Height" value={this.state.block.height} callback={this.updateBlockHeight.bind(this)} />
+                                <Input placeholder="Enter Block Unit" title="Unit" value={this.state.block.unit} callback={this.updateBlockUnit.bind(this)} />
 
                             </React.Fragment>
                         }

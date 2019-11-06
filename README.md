@@ -1,44 +1,114 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
 
-In the project directory, you can run:
+This project was built using React, Mozilla pdf.js, and Redux.
 
-### `yarn start`
+  
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+##  Usages
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+  
 
-### `yarn test`
+###  Setting up Basic Config
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+There are input tabs included in the top of the sidebar in which you can save Topic ID, Subject ID, Difficulty, Summary for the questions you are about to process.
 
-### `yarn build`
+  
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+###  Modes of Content
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+  
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Image Mode
 
-### `yarn eject`
+2. Text Mode
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+###  Preview
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+You can click on the preview button to preview all the questions and options selected.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+  
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+###  Steps Navigation
 
-## Learn More
+You can click on any stage of navigation to do it once again if something went wrong.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+  
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+###  Reset
+
+Click on the reset button to reset everything to default
+
+  
+  
+
+##  Selection-Modes for selecting a question
+
+  
+
+**1. Normal Crop Mode**
+
+This method is your general cropping method which you have to move your mouse from the initial position to the end position and select the area that you want to crop.
+
+To use this simple method, please remember to disable all modes (block and pen-touch-mode) first, otherwise, it might give some glitches.
+
+  
+
+* Go over to initial point and press shift, then while holding shift drag the mouse to the end position.<kbd> ⇧ + Mouse Over</kbd>
+
+* Release the shift and you'll have your image cropped.
+
+
+**2. Normal Copy Mode**
+
+* To use this method, select the text and copy it directly using <kbd>⌃+C</kbd> or <kbd>⌘ + C</kbd>
+
+* Remember that all modes are switched off before selection, otherwise their behavior may interfere.
+
+  
+**3. Block Mode**
+
+Block mode of selection is selecting a question based on properties (width, height, and unit) of block pre-defined/defined by the person using it.
+
+  
+
+* Turn on the block mode by either clicking on the switch or pressing <kbd>b</kbd>
+
+* By default, the block width, height, and unit are set to 0.
+
+* Click on the initial position and press shift, <kbd>⇧</kbd> and you'll see a block over the selected area per your defined config.
+
+* You can increase the width by pressing <kbd>→</kbd>, decrease it by pressing <kbd>←</kbd>. You can increase height similarly, <kbd>↓</kbd> to increase height, and <kbd>↑</kbd> to decrease height. Remember that the width or height increases/decreases by the unit predefined in the config. You can also increase/decrease it by using a mouse.
+
+* You can also switch the initial position by moving the mouse to another position and pressing shift again, <kbd>⇧</kbd>.
+
+* To save the image, just press <kbd>s</kbd>
+
+* Remeber that this mode follows the selection area to be, from top-left to bottom-right.
+
+  
+
+4. Pen Touch Mode
+
+Pen Touch mode allows you to crop an image by pointing two points, initial and endpoint. It helps by decreasing the time of selection and faster progress in tablets and smartphones. When put in with Block mode it's even faster.
+
+  
+
+* Turn on the pen touch mode by clicking on the switch.
+
+* Click on a point and that will be the initial point after which, click on another point and that will be the endpoint.
+
+* After selecting two points the affected area would be visible if it's alright, press <kbd>s</kbd> to save it.
+
+  
+
+5. Pen Touch Mode + Block Mode
+
+* When two of them are used together, they have both properties of block and pen touch mode.
+
+ 
+
+##  Issues
+
+If you find any issues, create an issue on Github and let me know. You can also email me on utkarshdix02@gmail.com. Currently, top-priority issues are:-
+
+* Weird Behavior after switching some modes on/off.
