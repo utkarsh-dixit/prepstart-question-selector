@@ -2512,6 +2512,7 @@ function webViewerKeyDown(evt) {
         if (pdfViewer.isHorizontalScrollbarEnabled) {
           turnOnlyIfPageFit = true;
         }
+        break;
 
       case 75:
       case 80:
@@ -2553,6 +2554,7 @@ function webViewerKeyDown(evt) {
         if (pdfViewer.isHorizontalScrollbarEnabled) {
           turnOnlyIfPageFit = true;
         }
+        break;
 
       case 74:
       case 78:
@@ -4323,7 +4325,8 @@ var defaultOptions = {
     kind: OptionKind.API
   },
   cMapUrl: {
-    value: '../prepstart-question-selector/web/cmaps/',
+    // value: '../prepstart-question-selector/web/cmaps/',
+    value: './cmaps/',
     kind: OptionKind.API
   },
   disableAutoFetch: {
@@ -4372,7 +4375,8 @@ var defaultOptions = {
     kind: OptionKind.WORKER
   },
   workerSrc: {
-    value: '../prepstart-question-selector/build/pdf.worker.js',
+    // value: '../prepstart-question-selector/build/pdf.worker.js',
+    value: '../build/pdf.worker.js',
     kind: OptionKind.WORKER
   }
 };
