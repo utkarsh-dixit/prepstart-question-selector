@@ -10,6 +10,7 @@ interface iProps {
     height: number;
     width: number;
     style?: any;
+    parentElement: any;
     resizeCallback?: any;
 }
 export default class AreaOverlay extends React.Component<any, any> {
@@ -52,7 +53,7 @@ export default class AreaOverlay extends React.Component<any, any> {
     
     render() {
         const { x, y, width, height } = this.props;
-
+        // console.log(this.props.parentElement);
         return ReactDOM.createPortal(
             (
                 <div className={css(styles.overlay)} ref={this.ref} style={{top: y, left: x, width: width >= 0 ? width : 0, height: height >= 0 ? height : 0, ...this.props.style}}>
@@ -62,7 +63,7 @@ export default class AreaOverlay extends React.Component<any, any> {
                     </div>
                 </div>
             ),
-            document.getElementsByTagName("body")[0]
+            this.props.parentElement
         );
     }
 }

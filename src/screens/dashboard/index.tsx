@@ -106,7 +106,22 @@ class Dashboard extends Component<any, any>{
     onMouseDown(event: MouseEvent) {
         if (this.state.pen_touch_mode && !this.state.doingPenTabletModeCrop) {
             this.disableTextLayering();
-            this.setState({ cropping: { value: true, clientX: this.state.mousePos.X, clientY: this.state.mousePos.Y }, doingPenTabletModeCrop: true });
+            const target = event.target as any;
+            let _target = this.state.mousePos.target ? this.state.mousePos.target : null;
+            if (target.tagName === "CANVAS" && target.id.slice(0, 4) === "page") {
+                _target = target;
+            } else {
+    
+                if (target.tagName === "SPAN" && target.parentElement.className === "textLayer") {
+                    _target = target.parentElement.parentElement.querySelector("canvas");
+                } else if (target.tagName === "DIV" && target.className === "textLayer") {
+                    _target = target.parentElement.querySelector("canvas");
+                }
+            }
+            if(!_target){
+                return false;
+            }
+            this.setState({ cropping: { value: true, clientX: this.state.mousePos.X, clientY: this.state.mousePos.Y, target: _target }, doingPenTabletModeCrop: true });
             // document.body.style.cursor="none";
             document.body.style.cursor = "crosshair";
             const style: HTMLStyleElement = document.getElementById("myStyle") ? document.getElementById("myStyle") as HTMLStyleElement : document.createElement("style");
@@ -221,7 +236,21 @@ class Dashboard extends Component<any, any>{
                 _target = target.parentElement.querySelector("canvas");
             }
         }
-        this.setState({ mousePos: { X: event.clientX, Y: event.clientY, target: _target } });
+        if(!_target){
+            return false;
+        }
+        if (target.tagName === "CANVAS" && target.id.slice(0, 4) === "page") {
+            _target = target;
+        } else {
+
+            if (target.tagName === "SPAN" && target.parentElement.className === "textLayer") {
+                _target = target.parentElement.parentElement.querySelector("canvas");
+            } else if (target.tagName === "DIV" && target.className === "textLayer") {
+                _target = target.parentElement.querySelector("canvas");
+            }
+        }
+        const pos = this.getRelativePosition(_target, {X: event.clientX, Y: event.clientY});
+        this.setState({ mousePos: { X: pos.X, Y: pos.Y, target: _target } });
     }
 
     getRelativePosition(canvas, abs) {
@@ -231,7 +260,7 @@ class Dashboard extends Component<any, any>{
             const xPos = abs.X - rect.x;
             const yPos = abs.Y - rect.y;
             pos = { X: xPos > 0 ? xPos : 0, Y: yPos > 0 ? yPos : 0 };
-            console.log(pos);
+            // console.log(pos);
         }
         return pos;
     }
@@ -240,8 +269,9 @@ class Dashboard extends Component<any, any>{
         const relativeCroppingPos = this.getRelativePosition(canvas, { X: this.state.cropping.clientX, Y: this.state.cropping.clientY });
         const relativeMousePos = this.getRelativePosition(canvas, { X: this.state.mousePos.X, Y: this.state.mousePos.Y });
 
-        const width = !this.state.block_mode ? Math.abs(relativeMousePos.X - relativeCroppingPos.X) : this.state.block.width;
-        const height = !this.state.block_mode ? Math.abs(relativeMousePos.Y -relativeCroppingPos.Y) : this.state.block.height;
+        const width = !this.state.block_mode ? Math.abs(this.state.mousePos.X - this.state.cropping.clientX) : this.state.block.width;
+        const height = !this.state.block_mode ? Math.abs(this.state.mousePos.Y -this.state.cropping.clientY) : this.state.block.height;
+
         document.body.style.cursor = "default";
         const style = document.getElementById("myStyle");
 
@@ -250,7 +280,7 @@ class Dashboard extends Component<any, any>{
         }
         const _this = this;
         const _promise = new Promise(async (resolve, reject) => {
-            const new_canvas = this.cropCanvas(canvas, relativeCroppingPos.X * DEFAULT_SCALE, relativeCroppingPos.Y * DEFAULT_SCALE, width * DEFAULT_SCALE, height * DEFAULT_SCALE);
+            const new_canvas = this.cropCanvas(canvas, this.state.cropping.clientX * (canvas.width/canvas.offsetWidth), this.state.cropping.clientY * (canvas.height/canvas.offsetHeight), width  * (canvas.width/canvas.offsetWidth), height * (canvas.height/canvas.offsetHeight));
             _this.moveToNextStep(new_canvas.toDataURL("image/png"), CONTENT_MODE.IMAGE);
             const _tasks = _this.state.tasks;
             removeByValue(_tasks, this);
@@ -272,7 +302,7 @@ class Dashboard extends Component<any, any>{
             return false;
         }
         if (this.state.cropping.value && !this.state.block_mode && event.keyCode == 16) {
-            this.takeScreenshot(this.state.mousePos.target);
+            this.takeScreenshot(this.state.cropping.target);
         }
     }
 
@@ -328,7 +358,7 @@ class Dashboard extends Component<any, any>{
             this.setState({ block: { ...this.state.block, width: this.state.block.width + this.state.block.unit } });
         }
         if (key === 83 && this.state.cropping.value) {
-            this.takeScreenshot(this.state.mousePos.target);
+            this.takeScreenshot(this.state.cropping.target);
         }
         if (ctrl && key == 67) {
             // ctrl + c
@@ -337,7 +367,9 @@ class Dashboard extends Component<any, any>{
             this.moveToNextStep(content, CONTENT_MODE.TEXT);
         } else if (key == 16) {
             this.disableTextLayering();
-            this.setState({ cropping: { value: true, clientX: this.state.mousePos.X, clientY: this.state.mousePos.Y } });
+            // console.log("Hey");
+            // console.log(this.state.mousePos.target);
+            this.setState({ cropping: { value: true, clientX: this.state.mousePos.X, clientY: this.state.mousePos.Y, target: this.state.mousePos.target } });
             // document.body.style.cursor="none";
             document.body.style.cursor = "crosshair";
             const style: HTMLStyleElement = document.getElementById("myStyle") ? document.getElementById("myStyle") as HTMLStyleElement : document.createElement("style");
@@ -480,9 +512,9 @@ class Dashboard extends Component<any, any>{
                     </Modal>
 
                 </div>
-                {this.state.cropping.value &&
+                {this.state.cropping.value && this.state.cropping.target && 
                     <React.Fragment>
-                        <AreaOverlay resizeCallback={this.handleOverlayResize.bind(this)} x={this.state.cropping.clientX} y={this.state.cropping.clientY} width={!this.state.block_mode ? Math.abs(this.state.mousePos.X - this.state.cropping.clientX) : this.state.block.width} height={!this.state.block_mode ? Math.abs(this.state.mousePos.Y - this.state.cropping.clientY) : this.state.block.height}></AreaOverlay>
+                        <AreaOverlay resizeCallback={this.handleOverlayResize.bind(this)} x={this.state.cropping.clientX} y={this.state.cropping.clientY} parentElement={this.state.cropping.target.parentElement} width={!this.state.block_mode ? Math.abs(this.state.mousePos.X - this.state.cropping.clientX) : this.state.block.width} height={!this.state.block_mode ? Math.abs(this.state.mousePos.Y - this.state.cropping.clientY) : this.state.block.height}></AreaOverlay>
                     </React.Fragment>
                 }
             </div>
