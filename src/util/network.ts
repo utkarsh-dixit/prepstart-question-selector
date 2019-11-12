@@ -2,7 +2,7 @@ import axios from "axios";
 import url from "url";
 import {serverName} from "../config/config";
 
-axios.defaults.headers.common['Authorization'] = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMSwicm9sZSI6InN0YW5kYXJkIiwiaWF0IjoxNTcwOTcyMzU1fQ.GP0vPy5R5UqFcrLSg_EovQAZkgeoszAR6OdTg1oJYHU`;
+axios.defaults.headers.common['Authorization'] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0OSwicm9sZSI6InN0YW5kYXJkIiwiaWF0IjoxNTczNTgwOTU2fQ.J39i1eckNQ01dQ4DKeidktirP2r5M1qqQ_sF6_DjfW0``;
 
 // Send API Request and execute function in case of request fail.
 export const requestAPICall = async (endpoint, payload) => {
