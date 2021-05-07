@@ -29,7 +29,7 @@
     "redux-thunk": "^2.3.0",
     "systemjs": "^6.1.4",
     "typescript": "3.6.4",
-    "underscore": "^1.9.1",
+    "underscore": "^1.12.1",
     "workerpool": "^5.0.1"
   },
   "scripts": {
